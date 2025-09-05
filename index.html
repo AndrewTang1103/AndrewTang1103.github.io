@@ -128,37 +128,33 @@
         </div>
     </header>
 
-    <!-- 分类导航栏 -->
-    <nav class="sticky top-16 z-40 glass border-b border-gray-800 transition-all duration-300">
-        <div class="container mx-auto px-4">
-            <div class="flex overflow-x-auto pb-3 scrollbar-hide space-x-3 md:space-x-5 py-2">
-                <!-- 全部笔记按钮 -->
-                <button class="category-btn whitespace-nowrap px-4 py-2 rounded-full bg-primary text-white hover:shadow-lg hover:shadow-primary/30 transition-all">
-                    全部笔记
-                </button>
-                
-                <!-- 英语学习分类 -->
-                <button class="category-btn whitespace-nowrap px-4 py-2 rounded-full bg-tech-card text-blue-400 border border-blue-500/30 hover:bg-blue-500/10 transition-all">
-                    <i class="fa fa-language mr-1"></i> 英语学习
-                </button>
-                
-                <!-- 外贸知识分类 -->
-                <button class="category-btn whitespace-nowrap px-4 py-2 rounded-full bg-tech-card text-green-400 border border-green-500/30 hover:bg-green-500/10 transition-all">
-                    <i class="fa fa-globe mr-1"></i> 外贸知识
-                </button>
-                
-                <!-- 钢结构分类 -->
-                <button class="category-btn whitespace-nowrap px-4 py-2 rounded-full bg-tech-card text-orange-400 border border-orange-500/30 hover:bg-orange-500/10 transition-all">
-                    <i class="fa fa-cubes mr-1"></i> 钢结构
-                </button>
-                
-                <!-- 金属夹芯板分类 -->
-                <button class="category-btn whitespace-nowrap px-4 py-2 rounded-full bg-tech-card text-purple-400 border border-purple-500/30 hover:bg-purple-500/10 transition-all">
-                    <i class="fa fa-th-large mr-1"></i> 金属夹芯板
-                </button>
-            </div>
+<!-- 分类导航 -->
+<nav class="sticky top-16 z-40 glass border-b border-gray-800 transition-all duration-300">
+    <div class="container mx-auto px-4">
+        <div class="flex overflow-x-auto pb-3 scrollbar-hide space-x-3 md:space-x-5 py-2">
+            <!-- 全部笔记 -->
+            <button class="category-btn active whitespace-nowrap px-4 py-2 rounded-full bg-primary text-white hover:shadow-lg hover:shadow-primary/30 transition-all" data-category="all">
+                全部笔记
+            </button>
+            <!-- 英语学习 -->
+            <button class="category-btn whitespace-nowrap px-4 py-2 rounded-full bg-tech-card text-english border border-english/30 hover:bg-english/10 transition-all" data-category="english">
+                <i class="fa fa-language mr-1"></i> 英语学习
+            </button>
+            <!-- 外贸知识 -->
+            <button class="category-btn whitespace-nowrap px-4 py-2 rounded-full bg-tech-card text-trade border border-trade/30 hover:bg-trade/10 transition-all" data-category="trade">
+                <i class="fa fa-globe mr-1"></i> 外贸知识
+            </button>
+            <!-- 钢结构 -->
+            <button class="category-btn whitespace-nowrap px-4 py-2 rounded-full bg-tech-card text-steel border border-steel/30 hover:bg-steel/10 transition-all" data-category="steel">
+                <i class="fa fa-cubes mr-1"></i> 钢结构
+            </button>
+            <!-- 金属夹芯板 -->
+            <button class="category-btn whitespace-nowrap px-4 py-2 rounded-full bg-tech-card text-panel border border-panel/30 hover:bg-panel/10 transition-all" data-category="panel">
+                <i class="fa fa-th-large mr-1"></i> 金属夹芯板
+            </button>
         </div>
-    </nav>
+    </div>
+</nav>
 
     <!-- 主要内容区 -->
     <main class="container mx-auto px-4 py-8">
@@ -716,6 +712,57 @@
             });
         });
     </script>
+    // 分类筛选功能
+const categoryBtns = document.querySelectorAll('.category-btn');
+const noteCards = document.querySelectorAll('article[data-category]');
+
+// 给每个分类按钮绑定点击事件
+categoryBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        // 1. 切换按钮高亮状态
+        categoryBtns.forEach(b => {
+            b.classList.remove('active', 'bg-primary', 'text-white', 'hover:shadow-lg', 'hover:shadow-primary/30');
+            b.classList.add('bg-tech-card', 'border');
+            
+            // 恢复各分类按钮的原始样式
+            if (b.getAttribute('data-category') === 'english') {
+                b.classList.add('text-english', 'border-english/30', 'hover:bg-english/10');
+            } else if (b.getAttribute('data-category') === 'trade') {
+                b.classList.add('text-trade', 'border-trade/30', 'hover:bg-trade/10');
+            } else if (b.getAttribute('data-category') === 'steel') {
+                b.classList.add('text-steel', 'border-steel/30', 'hover:bg-steel/10');
+            } else if (b.getAttribute('data-category') === 'panel') {
+                b.classList.add('text-panel', 'border-panel/30', 'hover:bg-panel/10');
+            } else {
+                b.classList.add('text-gray-300', 'border-gray-700', 'hover:bg-gray-700/50');
+            }
+        });
+        
+        // 给当前点击的按钮添加高亮
+        btn.classList.add('active', 'bg-primary', 'text-white', 'hover:shadow-lg', 'hover:shadow-primary/30');
+        btn.classList.remove('bg-tech-card', 'border', 'text-english', 'border-english/30', 'hover:bg-english/10',
+                            'text-trade', 'border-trade/30', 'hover:bg-trade/10',
+                            'text-steel', 'border-steel/30', 'hover:bg-steel/10',
+                            'text-panel', 'border-panel/30', 'hover:bg-panel/10',
+                            'text-gray-300', 'border-gray-700', 'hover:bg-gray-700/50');
+        
+        // 2. 筛选并显示对应分类的笔记
+        const targetCategory = btn.getAttribute('data-category');
+        noteCards.forEach(card => {
+            if (targetCategory === 'all' || card.getAttribute('data-category') === targetCategory) {
+                card.style.display = 'block'; // 显示匹配的笔记
+                // 重新添加动画（可选）
+                card.style.animation = 'none';
+                setTimeout(() => {
+                    card.style.animation = 'float 6s ease-in-out infinite';
+                }, 10);
+            } else {
+                card.style.display = 'none'; // 隐藏不匹配的笔记
+            }
+        });
+    });
+});
 </body>
 </html>
+
     
