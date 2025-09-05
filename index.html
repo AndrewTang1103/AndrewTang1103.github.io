@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>科技知识库 | 专业学习笔记</title>
+    
+    <!-- 外部资源 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    
+    <!-- Tailwind 配置 - 科技感色彩方案 -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#6366f1', // 主色调：靛蓝色
+                        secondary: '#10b981', // 辅助色：亮绿色
+                        accent: '#f43f5e', // 强调色：亮粉色
+                        tech: {
+                            dark: '#0f172a',      // 科技感深色背景
+                            darker: '#020617',    // 更深的背景
+                            card: '#1e293b',      // 卡片背景
+                            glow: 'rgba(99, 102, 241, 0.5)', // 发光效果
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'glow': 'glow 2s ease-in-out infinite alternate',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        glow: {
+                            '0%': { boxShadow: '0 0 5px rgba(99, 102, 241, 0.5)' },
+                            '100%': { boxShadow: '0 0 20px rgba(99, 102, 241, 0.8)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- 自定义工具类 -->
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .text-gradient {
+                background-clip: text;
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+            .bg-grid {
+                background-image: linear-gradient(rgba(148, 163, 184, 0.1) 1px, transparent 1px),
+                                linear-gradient(90deg, rgba(148, 163, 184, 0.1) 1px, transparent 1px);
+                background-size: 20px 20px;
+            }
+            .glass {
+                backdrop-filter: blur(10px);
+                background-color: rgba(30, 41, 59, 0.7);
+            }
+            .scrollbar-hide::-webkit-scrollbar {
+                display: none;
+            }
+            .border-glow {
+                box-shadow: 0 0 5px theme('colors.primary'),
+                            inset 0 0 5px theme('colors.primary');
+            }
+        }
+    </style>
+</head>
+
+<!-- 科技感深色背景 + 网格纹理 -->
+<body class="bg-tech-darker text-gray-200 bg-grid min-h-screen font-sans">
+    <!-- 顶部装饰线条 -->
+    <div class="h-1 bg-gradient-to-r from-primary via-secondary to-accent"></div>
+
+    <!-- 顶部导航栏 - 玻璃态效果 -->
+    <header class="sticky top-0 z-50 glass border-b border-gray-800 transition-all duration-300">
+        <div class="container mx-auto px-4 py-4 flex flex-wrap items-center justify-between">
+            <!-- 网站标题和图标 -->
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center animate-pulse-slow">
+                    <i class="fa fa-database text-white text-xl"></i>
+                </div>
+                <h1 class="text-xl md:text-2xl font-bold bg-gradient-to-r from-primary to-secondary text-gradient">
+                    科技知识库
+                </h1>
+            </div>
+            
+            <!-- 搜索框 - 带发光效果 -->
+            <div class="w-full md:w-auto mt-4 md:mt-0 flex-1 md:flex-initial max-w-md mx-auto md:mx-0">
+                <div class="relative group">
+                    <input type="text" id="search-input" 
+                           class="w-full px-4 py-2.5 rounded-lg bg-tech-card border border-gray-700 focus:border-primary focus:outline-none transition-all pl-10 pr-4 group-hover:animate-glow"
+                           placeholder="搜索笔记、术语或知识点...">
+                    <i class="fa fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 group-hover:text-primary transition-colors"></i>
+                </div>
+            </div>
+            
+            <!-- 右侧功能区 -->
+            <div class="flex items-center space-x-4 mt-4 md:mt-0">
+                <!-- 主题切换按钮 -->
+                <button id="theme-toggle" class="p-2 rounded-full hover:bg-tech-card transition-colors relative overflow-hidden group">
+                    <span class="absolute inset-0 bg-gradient-to-r from-primary/20 to-accent/20 opacity-0 group-hover:opacity-100 transition-opacity"></span>
+                    <i class="fa fa-moon-o text-gray-300 group-hover:text-white transition-colors"></i>
+                </button>
+                
+                <!-- 新建笔记按钮 - 带渐变和动画 -->
+                <a href="#" class="hidden md:flex items-center px-4 py-2.5 rounded-lg bg-gradient-to-r from-primary to-secondary hover:shadow-lg hover:shadow-primary/20 transition-all">
+                    <i class="fa fa-plus mr-2"></i> 新建笔记
+                </a>
+                <button class="md:hidden p-2.5 rounded-lg bg-gradient-to-r from-primary to-secondary hover:shadow-lg hover:shadow-primary/20 transition-all">
+                    <i class="fa fa-plus"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- 分类导航栏 -->
+    <nav class="sticky top-16 z-40 glass border-b border-gray-800 transition-all duration-300">
+        <div class="container mx-auto px-4">
+            <div class="flex overflow-x-auto pb-3 scrollbar-hide space-x-3 md:space-x-5 py-2">
+                <!-- 全部笔记按钮 -->
+                <button class="category-btn whitespace-nowrap px-4 py-2 rounded-full bg-primary text-white hover:shadow-lg hover:shadow-primary/30 transition-all">
+                    全部笔记
+                </button>
+                
+                <!-- 英语学习分类 -->
+                <button class="category-btn whitespace-nowrap px-4 py-2 rounded-full bg-tech-card text-blue-400 border border-blue-500/30 hover:bg-blue-500/10 transition-all">
+                    <i class="fa fa-language mr-1"></i> 英语学习
+                </button>
+                
+                <!-- 外贸知识分类 -->
+                <button class="category-btn whitespace-nowrap px-4 py-2 rounded-full bg-tech-card text-green-400 border border-green-500/30 hover:bg-green-500/10 transition-all">
+                    <i class="fa fa-globe mr-1"></i> 外贸知识
+                </button>
+                
+                <!-- 钢结构分类 -->
+                <button class="category-btn whitespace-nowrap px-4 py-2 rounded-full bg-tech-card text-orange-400 border border-orange-500/30 hover:bg-orange-500/10 transition-all">
+                    <i class="fa fa-cubes mr-1"></i> 钢结构
+                </button>
+                
+                <!-- 金属夹芯板分类 -->
+                <button class="category-btn whitespace-nowrap px-4 py-2 rounded-full bg-tech-card text-purple-400 border border-purple-500/30 hover:bg-purple-500/10 transition-all">
+                    <i class="fa fa-th-large mr-1"></i> 金属夹芯板
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主要内容区 -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- 数据概览卡片 - 科技感仪表盘风格 -->
+        <section class="mb-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+            <div class="bg-tech-card rounded-xl p-5 border border-gray-700 hover:border-primary/50 transition-all hover:shadow-lg hover:shadow-primary/10">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-gray-400 text-sm">总笔记数</p>
+                        <h3 class="text-3xl font-bold mt-1">48</h3>
+                    </div>
+                    <div class="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center text-primary">
+                        <i class="fa fa-file-text-o"></i>
+                    </div>
+                </div>
+                <div class="mt-4 text-sm text-green-400 flex items-center">
+                    <i class="fa fa-arrow-up mr-1"></i> 较上月增长 12%
+                </div>
+            </div>
+            
+            <div class="bg-tech-card rounded-xl p-5 border border-gray-700 hover:border-secondary/50 transition-all hover:shadow-lg hover:shadow-secondary/10">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-gray-400 text-sm">学习时长</p>
+                        <h3 class="text-3xl font-bold mt-1">126h</h3>
+                    </div>
+                    <div class="w-10 h-10 rounded-lg bg-secondary/20 flex items-center justify-center text-secondary">
+                        <i class="fa fa-clock-o"></i>
+                    </div>
+                </div>
+                <div class="mt-4 text-sm text-green-400 flex items-center">
+                    <i class="fa fa-arrow-up mr-1"></i> 较上月增长 8%
+                </div>
+            </div>
+            
+            <div class="bg-tech-card rounded-xl p-5 border border-gray-700 hover:border-accent/50 transition-all hover:shadow-lg hover:shadow-accent/10">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-gray-400 text-sm">已掌握知识点</p>
+                        <h3 class="text-3xl font-bold mt-1">32</h3>
+                    </div>
+                    <div class="w-10 h-10 rounded-lg bg-accent/20 flex items-center justify-center text-accent">
+                        <i class="fa fa-check-circle-o"></i>
+                    </div>
+                </div>
+                <div class="mt-4 text-sm text-green-400 flex items-center">
+                    <i class="fa fa-arrow-up mr-1"></i> 较上月增长 15%
+                </div>
+            </div>
+            
+            <div class="bg-tech-card rounded-xl p-5 border border-gray-700 hover:border-blue-500/50 transition-all hover:shadow-lg hover:shadow-blue-500/10">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-gray-400 text-sm">待学习内容</p>
+                        <h3 class="text-3xl font-bold mt-1">16</h3>
+                    </div>
+                    <div class="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center text-blue-400">
+                        <i class="fa fa-list-alt"></i>
+                    </div>
+                </div>
+                <div class="mt-4 text-sm text-red-400 flex items-center">
+                    <i class="fa fa-arrow-up mr-1"></i> 较上月增长 5%
+                </div>
+            </div>
+        </section>
+
+        <!-- 最近更新的笔记 -->
+        <section class="mb-12">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold flex items-center">
+                    <span class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center mr-2">
+                        <i class="fa fa-clock-o text-primary"></i>
+                    </span>
+                    最近更新
+                </h2>
+                <a href="#" class="text-primary hover:text-primary/80 text-sm flex items-center transition-colors">
+                    查看全部 <i class="fa fa-angle-right ml-1"></i>
+                </a>
+            </div>
+            
+            <!-- 笔记网格 - 带滚动动画 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- 英语学习笔记卡片1 -->
+                <article class="bg-tech-card rounded-xl overflow-hidden border border-gray-700 hover:border-blue-500/50 card-hover group animate-on-scroll">
+                    <div class="h-2 bg-gradient-to-r from-blue-500 to-primary"></div>
+                    <div class="p-5">
+                        <div class="flex justify-between items-start mb-3">
+                            <span class="text-xs px-3 py-1 bg-blue-500/10 text-blue-400 rounded-full border border-blue-500/20">英语学习</span>
+                            <span class="text-xs text-gray-400">2023-10-18</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 group-hover:text-blue-400 transition-colors">
+                            <a href="#">外贸英语函电模板与范例</a>
+                        </h3>
+                        <p class="text-gray-400 text-sm mb-4 line-clamp-3">
+                            整理了15种常用外贸英语函电模板，包括询盘、发盘、还盘、订单确认、信用证通知等场景，附专业词汇解析。
+                        </p>
+                        <div class="flex justify-between items-center pt-3 border-t border-gray-800">
+                            <div class="flex items-center text-sm text-gray-500">
+                                <span class="flex items-center mr-4">
+                                    <i class="fa fa-eye mr-1"></i> 156
+                                </span>
+                                <span class="flex items-center">
+                                    <i class="fa fa-tag mr-1"></i> 函电
+                                </span>
+                            </div>
+                            <button class="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center hover:bg-blue-500/20 hover:text-blue-400 transition-colors">
+                                <i class="fa fa-bookmark-o"></i>
+                            </button>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 外贸知识笔记卡片 -->
+                <article class="bg-tech-card rounded-xl overflow-hidden border border-gray-700 hover:border-green-500/50 card-hover group animate-on-scroll" style="animation-delay: 100ms;">
+                    <div class="h-2 bg-gradient-to-r from-green-500 to-secondary"></div>
+                    <div class="p-5">
+                        <div class="flex justify-between items-start mb-3">
+                            <span class="text-xs px-3 py-1 bg-green-500/10 text-green-400 rounded-full border border-green-500/20">外贸知识</span>
+                            <span class="text-xs text-gray-400">2023-10-15</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 group-hover:text-green-400 transition-colors">
+                            <a href="#">国际海运流程与费用计算</a>
+                        </h3>
+                        <p class="text-gray-400 text-sm mb-4 line-clamp-3">
+                            详细解析国际海运出口流程，包括订舱、报关、装箱、海运、目的港清关等环节，附整柜与拼箱费用计算方式。
+                        </p>
+                        <div class="flex justify-between items-center pt-3 border-t border-gray-800">
+                            <div class="flex items-center text-sm text-gray-500">
+                                <span class="flex items-center mr-4">
+                                    <i class="fa fa-eye mr-1"></i> 203
+                                </span>
+                                <span class="flex items-center">
+                                    <i class="fa fa-tag mr-1"></i> 海运
+                                </span>
+                            </div>
+                            <button class="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center hover:bg-green-500/20 hover:text-green-400 transition-colors">
+                                <i class="fa fa-bookmark"></i>
+                            </button>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 钢结构笔记卡片 -->
+                <article class="bg-tech-card rounded-xl overflow-hidden border border-gray-700 hover:border-orange-500/50 card-hover group animate-on-scroll" style="animation-delay: 200ms;">
+                    <div class="h-2 bg-gradient-to-r from-orange-500 to-amber-500"></div>
+                    <div class="p-5">
+                        <div class="flex justify-between items-start mb-3">
+                            <span class="text-xs px-3 py-1 bg-orange-500/10 text-orange-400 rounded-full border border-orange-500/20">钢结构</span>
+                            <span class="text-xs text-gray-400">2023-10-12</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 group-hover:text-orange-400 transition-colors">
+                            <a href="#">钢结构节点设计规范与实例</a>
+                        </h3>
+                        <p class="text-gray-400 text-sm mb-4 line-clamp-3">
+                            总结钢结构节点设计的基本原则，展示10种常见节点连接方式的构造详图，包括梁柱连接、支撑节点等关键部位设计。
+                        </p>
+                        <div class="flex justify-between items-center pt-3 border-t border-gray-800">
+                            <div class="flex items-center text-sm text-gray-500">
+                                <span class="flex items-center mr-4">
+                                    <i class="fa fa-eye mr-1"></i> 178
+                                </span>
+                                <span class="flex items-center">
+                                    <i class="fa fa-tag mr-1"></i> 节点设计
+                                </span>
+                            </div>
+                            <button class="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center hover:bg-orange-500/20 hover:text-orange-400 transition-colors">
+                                <i class="fa fa-bookmark-o"></i>
+                            </button>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- 金属夹芯板分类笔记 -->
+        <section class="mb-12">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold flex items-center">
+                    <span class="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center mr-2">
+                        <i class="fa fa-th-large text-purple-400"></i>
+                    </span>
+                    金属夹芯板
+                </h2>
+                <a href="#" class="text-purple-400 hover:text-purple-300 text-sm flex items-center transition-colors">
+                    查看全部 <i class="fa fa-angle-right ml-1"></i>
+                </a>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- 金属夹芯板笔记1 -->
+                <article class="bg-tech-card rounded-xl overflow-hidden border border-gray-700 hover:border-purple-500/50 card-hover group animate-on-scroll">
+                    <div class="relative h-48 overflow-hidden">
+                        <img src="https://picsum.photos/id/111/600/400" alt="金属夹芯板安装现场" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-tech-card to-transparent"></div>
+                    </div>
+                    <div class="p-5">
+                        <div class="flex justify-between items-start mb-3">
+                            <span class="text-xs px-3 py-1 bg-purple-500/10 text-purple-400 rounded-full border border-purple-500/20">金属夹芯板</span>
+                            <span class="text-xs text-gray-400">2023-10-10</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 group-hover:text-purple-400 transition-colors">
+                            <a href="#">金属夹芯板安装工艺与质量控制</a>
+                        </h3>
+                        <p class="text-gray-400 text-sm mb-4 line-clamp-2">
+                            详细介绍金属夹芯板的安装流程，从测量放线、切割加工到固定连接的全过程操作要点，以及质量验收标准。
+                        </p>
+                        <div class="flex justify-between items-center pt-3 border-t border-gray-800">
+                            <div class="flex items-center text-sm text-gray-500">
+                                <span class="flex items-center mr-4">
+                                    <i class="fa fa-eye mr-1"></i> 215
+                                </span>
+                                <span class="flex items-center">
+                                    <i class="fa fa-tag mr-1"></i> 安装工艺
+                                </span>
+                            </div>
+                            <button class="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center hover:bg-purple-500/20 hover:text-purple-400 transition-colors">
+                                <i class="fa fa-bookmark-o"></i>
+                            </button>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 金属夹芯板笔记2 -->
+                <article class="bg-tech-card rounded-xl overflow-hidden border border-gray-700 hover:border-purple-500/50 card-hover group animate-on-scroll" style="animation-delay: 100ms;">
+                    <div class="relative h-48 overflow-hidden">
+                        <img src="https://picsum.photos/id/133/600/400" alt="不同类型的金属夹芯板样品" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-tech-card to-transparent"></div>
+                    </div>
+                    <div class="p-5">
+                        <div class="flex justify-between items-start mb-3">
+                            <span class="text-xs px-3 py-1 bg-purple-500/10 text-purple-400 rounded-full border border-purple-500/20">金属夹芯板</span>
+                            <span class="text-xs text-gray-400">2023-10-05</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 group-hover:text-purple-400 transition-colors">
+                            <a href="#">金属夹芯板材料性能与选型指南</a>
+                        </h3>
+                        <p class="text-gray-400 text-sm mb-4 line-clamp-2">
+                            对比分析不同芯材（聚氨酯、岩棉、玻璃棉）金属夹芯板的物理性能、防火等级、保温效果及适用场景，附选型流程图。
+                        </p>
+                        <div class="flex justify-between items-center pt-3 border-t border-gray-800">
+                            <div class="flex items-center text-sm text-gray-500">
+                                <span class="flex items-center mr-4">
+                                    <i class="fa fa-eye mr-1"></i> 189
+                                </span>
+                                <span class="flex items-center">
+                                    <i class="fa fa-tag mr-1"></i> 材料选型
+                                </span>
+                            </div>
+                            <button class="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center hover:bg-purple-500/20 hover:text-purple-400 transition-colors">
+                                <i class="fa fa-bookmark"></i>
+                            </button>
+                        </div>
+                    </div>
+                </article>
+            </div>
+            
+            <!-- 查看更多按钮 - 带科技感动画 -->
+            <button class="mt-6 px-5 py-2.5 border border-purple-500/50 text-purple-400 rounded-lg hover:bg-purple-500/10 transition-all group">
+                查看更多 
+                <i class="fa fa-angle-right ml-1 group-hover:translate-x-1 transition-transform"></i>
+            </button>
+        </section>
+
+        <!-- 学习进度与常用标签 -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
+            <!-- 学习进度图表 -->
+            <div class="lg:col-span-1 bg-tech-card rounded-xl p-5 border border-gray-700 animate-on-scroll">
+                <h2 class="text-xl font-bold mb-5 flex items-center">
+                    <span class="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center mr-2 text-sm">
+                        <i class="fa fa-line-chart text-primary"></i>
+                    </span>
+                    学习进度
+                </h2>
+                
+                <!-- 进度条 -->
+                <div class="space-y-5">
+                    <div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>英语学习</span>
+                            <span>68%</span>
+                        </div>
+                        <div class="h-2 bg-gray-800 rounded-full overflow-hidden">
+                            <div class="h-full bg-blue-500 rounded-full" style="width: 68%"></div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>外贸知识</span>
+                            <span>45%</span>
+                        </div>
+                        <div class="h-2 bg-gray-800 rounded-full overflow-hidden">
+                            <div class="h-full bg-green-500 rounded-full" style="width: 45%"></div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>钢结构</span>
+                            <span>72%</span>
+                        </div>
+                        <div class="h-2 bg-gray-800 rounded-full overflow-hidden">
+                            <div class="h-full bg-orange-500 rounded-full" style="width: 72%"></div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>金属夹芯板</span>
+                            <span>53%</span>
+                        </div>
+                        <div class="h-2 bg-gray-800 rounded-full overflow-hidden">
+                            <div class="h-full bg-purple-500 rounded-full" style="width: 53%"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 学习时间分布 -->
+                <div class="mt-6 pt-6 border-t border-gray-800">
+                    <h3 class="font-medium mb-4">本周学习时间</h3>
+                    <div class="flex items-end justify-between h-32">
+                        <div class="flex flex-col items-center w-8">
+                            <div class="w-full bg-primary/30 rounded-t" style="height: 40%"></div>
+                            <span class="text-xs mt-1">一</span>
+                        </div>
+                        <div class="flex flex-col items-center w-8">
+                            <div class="w-full bg-primary/50 rounded-t" style="height: 60%"></div>
+                            <span class="text-xs mt-1">二</span>
+                        </div>
+                        <div class="flex flex-col items-center w-8">
+                            <div class="w-full bg-primary/70 rounded-t" style="height: 80%"></div>
+                            <span class="text-xs mt-1">三</span>
+                        </div>
+                        <div class="flex flex-col items-center w-8">
+                            <div class="w-full bg-primary/40 rounded-t" style="height: 50%"></div>
+                            <span class="text-xs mt-1">四</span>
+                        </div>
+                        <div class="flex flex-col items-center w-8">
+                            <div class="w-full bg-primary/60 rounded-t" style="height: 70%"></div>
+                            <span class="text-xs mt-1">五</span>
+                        </div>
+                        <div class="flex flex-col items-center w-8">
+                            <div class="w-full bg-primary/20 rounded-t" style="height: 30%"></div>
+                            <span class="text-xs mt-1">六</span>
+                        </div>
+                        <div class="flex flex-col items-center w-8">
+                            <div class="w-full bg-primary/80 rounded-t" style="height: 90%"></div>
+                            <span class="text-xs mt-1">日</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 常用标签 -->
+            <div class="lg:col-span-2 bg-tech-card rounded-xl p-5 border border-gray-700 animate-on-scroll" style="animation-delay: 100ms;">
+                <h2 class="text-xl font-bold mb-5 flex items-center">
+                    <span class="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center mr-2 text-sm">
+                        <i class="fa fa-tags text-primary"></i>
+                    </span>
+                    知识标签云
+                </h2>
+                
+                <div class="flex flex-wrap gap-3">
+                    <a href="#" class="px-4 py-2.5 bg-blue-500/10 text-blue-400 rounded-lg hover:bg-blue-500/20 transition-all border border-blue-500/20">
+                        商务英语 <span class="text-xs bg-blue-500/20 px-2 py-0.5 rounded-full ml-1">32</span>
+                    </a>
+                    <a href="#" class="px-4 py-2.5 bg-green-500/10 text-green-400 rounded-lg hover:bg-green-500/20 transition-all border border-green-500/20">
+                        报关流程 <span class="text-xs bg-green-500/20 px-2 py-0.5 rounded-full ml-1">24</span>
+                    </a>
+                    <a href="#" class="px-4 py-2.5 bg-orange-500/10 text-orange-400 rounded-lg hover:bg-orange-500/20 transition-all border border-orange-500/20">
+                        钢结构设计 <span class="text-xs bg-orange-500/20 px-2 py-0.5 rounded-full ml-1">18</span>
+                    </a>
+                    <a href="#" class="px-4 py-2.5 bg-purple-500/10 text-purple-400 rounded-lg hover:bg-purple-500/20 transition-all border border-purple-500/20">
+                        夹芯板施工 <span class="text-xs bg-purple-500/20 px-2 py-0.5 rounded-full ml-1">15</span>
+                    </a>
+                    <a href="#" class="px-4 py-2.5 bg-gray-800 text-gray-300 rounded-lg hover:bg-gray-700 transition-all">
+                        信用证操作 <span class="text-xs bg-gray-700 px-2 py-0.5 rounded-full ml-1">12</span>
+                    </a>
+                    <a href="#" class="px-4 py-2.5 bg-gray-800 text-gray-300 rounded-lg hover:bg-gray-700 transition-all">
+                        焊接工艺 <span class="text-xs bg-gray-700 px-2 py-0.5 rounded-full ml-1">10</span>
+                    </a>
+                    <a href="#" class="px-4 py-2.5 bg-gray-800 text-gray-300 rounded-lg hover:bg-gray-700 transition-all">
+                        国际贸易术语 <span class="text-xs bg-gray-700 px-2 py-0.5 rounded-full ml-1">9</span>
+                    </a>
+                    <a href="#" class="px-4 py-2.5 bg-gray-800 text-gray-300 rounded-lg hover:bg-gray-700 transition-all">
+                        材料性能 <span class="text-xs bg-gray-700 px-2 py-0.5 rounded-full ml-1">8</span>
+                    </a>
+                    <a href="#" class="px-4 py-2.5 bg-gray-800 text-gray-300 rounded-lg hover:bg-gray-700 transition-all">
+                        英语语法 <span class="text-xs bg-gray-700 px-2 py-0.5 rounded-full ml-1">7</span>
+                    </a>
+                    <a href="#" class="px-4 py-2.5 bg-gray-800 text-gray-300 rounded-lg hover:bg-gray-700 transition-all">
+                        质量检测 <span class="text-xs bg-gray-700 px-2 py-0.5 rounded-full ml-1">6</span>
+                    </a>
+                    <a href="#" class="px-4 py-2.5 bg-gray-800 text-gray-300 rounded-lg hover:bg-gray-700 transition-all">
+                        物流管理 <span class="text-xs bg-gray-700 px-2 py-0.5 rounded-full ml-1">5</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="bg-tech-card border-t border-gray-800 py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-6 md:mb-0">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center">
+                            <i class="fa fa-database text-white text-sm"></i>
+                        </div>
+                        <span class="font-bold text-lg bg-gradient-to-r from-primary to-secondary text-gradient">科技知识库</span>
+                    </div>
+                    <p class="text-sm text-gray-400 mt-2 max-w-md">
+                        专注于英语、外贸、钢结构和金属夹芯板领域的专业知识整理与分享，助力系统化学习与高效工作。
+                    </p>
+                </div>
+                
+                <div class="flex flex-col md:flex-row md:space-x-12 space-y-6 md:space-y-0">
+                    <div>
+                        <h3 class="text-gray-300 font-medium mb-3">快速链接</h3>
+                        <ul class="space-y-2 text-sm text-gray-400">
+                            <li><a href="#" class="hover:text-primary transition-colors">全部笔记</a></li>
+                            <li><a href="#" class="hover:text-primary transition-colors">学习计划</a></li>
+                            <li><a href="#" class="hover:text-primary transition-colors">知识图谱</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-gray-300 font-medium mb-3">联系与反馈</h3>
+                        <ul class="space-y-2 text-sm text-gray-400">
+                            <li><a href="#" class="hover:text-primary transition-colors">关于我</a></li>
+                            <li><a href="#" class="hover:text-primary transition-colors">反馈建议</a></li>
+                            <li><a href="#" class="hover:text-primary transition-colors">资源分享</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-8 pt-6 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center">
+                <div class="text-sm text-gray-500 mb-4 md:mb-0">
+                    &copy; 2023 科技知识库 | 托管于 Github Pages
+                </div>
+                
+                <div class="flex space-x-5">
+                    <a href="#" class="w-9 h-9 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-primary/20 hover:text-primary transition-all">
+                        <i class="fa fa-github"></i>
+                    </a>
+                    <a href="#" class="w-9 h-9 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-primary/20 hover:text-primary transition-all">
+                        <i class="fa fa-weixin"></i>
+                    </a>
+                    <a href="#" class="w-9 h-9 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-primary/20 hover:text-primary transition-all">
+                        <i class="fa fa-linkedin"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 交互功能脚本 -->
+    <script>
+        // 暗黑模式切换功能（默认已是深色模式，这里改为切换到浅色模式）
+        const themeToggle = document.getElementById('theme-toggle');
+        const htmlElement = document.documentElement;
+        const bodyElement = document.body;
+        
+        themeToggle.addEventListener('click', () => {
+            htmlElement.classList.toggle('light');
+            bodyElement.classList.toggle('bg-white');
+            bodyElement.classList.toggle('text-gray-800');
+            bodyElement.classList.toggle('bg-tech-darker');
+            bodyElement.classList.toggle('text-gray-200');
+            bodyElement.classList.toggle('bg-grid');
+            
+            // 切换图标
+            const icon = themeToggle.querySelector('i');
+            if (icon.classList.contains('fa-moon-o')) {
+                icon.classList.remove('fa-moon-o');
+                icon.classList.add('fa-sun-o');
+            } else {
+                icon.classList.remove('fa-sun-o');
+                icon.classList.add('fa-moon-o');
+            }
+        });
+        
+        // 分类按钮切换功能
+        const categoryBtns = document.querySelectorAll('.category-btn');
+        categoryBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // 重置所有按钮样式
+                categoryBtns.forEach(b => {
+                    b.classList.remove('bg-primary', 'text-white', 'hover:shadow-lg', 'hover:shadow-primary/30');
+                    
+                    // 恢复各自分类的样式
+                    if (b.textContent.includes('英语')) {
+                        b.classList.add('bg-tech-card', 'text-blue-400', 'border', 'border-blue-500/30', 'hover:bg-blue-500/10');
+                    } else if (b.textContent.includes('外贸')) {
+                        b.classList.add('bg-tech-card', 'text-green-400', 'border', 'border-green-500/30', 'hover:bg-green-500/10');
+                    } else if (b.textContent.includes('钢结构')) {
+                        b.classList.add('bg-tech-card', 'text-orange-400', 'border', 'border-orange-500/30', 'hover:bg-orange-500/10');
+                    } else if (b.textContent.includes('金属夹芯板')) {
+                        b.classList.add('bg-tech-card', 'text-purple-400', 'border', 'border-purple-500/30', 'hover:bg-purple-500/10');
+                    } else if (b.textContent.includes('全部')) {
+                        b.classList.add('bg-tech-card', 'text-gray-300', 'border', 'border-gray-700', 'hover:bg-gray-700/50');
+                    }
+                });
+                
+                // 设置当前点击的按钮为选中状态
+                btn.classList.remove('bg-tech-card', 'border', 'border-blue-500/30', 'hover:bg-blue-500/10',
+                                    'border-green-500/30', 'hover:bg-green-500/10',
+                                    'border-orange-500/30', 'hover:bg-orange-500/10',
+                                    'border-purple-500/30', 'hover:bg-purple-500/10',
+                                    'border-gray-700', 'hover:bg-gray-700/50',
+                                    'text-blue-400', 'text-green-400', 'text-orange-400', 'text-purple-400', 'text-gray-300');
+                btn.classList.add('bg-primary', 'text-white', 'hover:shadow-lg', 'hover:shadow-primary/30');
+            });
+        });
+        
+        // 搜索框功能
+        const searchInput = document.getElementById('search-input');
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            console.log('搜索内容:', searchTerm);
+            // 实际应用中可以根据搜索词过滤笔记
+        });
+        
+        // 滚动动画效果
+        document.addEventListener('DOMContentLoaded', () => {
+            // 初始化动画样式
+            const style = document.createElement('style');
+            style.textContent = `
+                .animate-on-scroll {
+                    opacity: 0;
+                    transform: translateY(20px);
+                    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+                }
+                .animate-on-scroll.visible {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            `;
+            document.head.appendChild(style);
+            
+            // 检测元素是否在视口中
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            // 观察所有带animate-on-scroll类的元素
+            document.querySelectorAll('.animate-on-scroll').forEach(el => {
+                observer.observe(el);
+            });
+        });
+    </script>
+</body>
+</html>
+    
