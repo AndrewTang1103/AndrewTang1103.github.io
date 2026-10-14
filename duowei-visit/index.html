@@ -356,7 +356,25 @@ footer img { width: 104px; filter: var(--logo-filter); }
 footer p { color: var(--slate); font-size: var(--fs-sm); max-width: 52ch; }
 
 /* Wider screens */
+.tour { margin-top: 28px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--card); overflow: hidden; }
+.tour-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 14px; padding: 20px; }
+.tour-head > div { display: grid; gap: 6px; min-width: 0; }
+.tour-head h3 { font-size: 1.375rem; letter-spacing: -0.015em; line-height: 1.2; text-wrap: balance; }
+.tour-stage { position: relative; aspect-ratio: 4 / 5; max-height: 78vh; width: 100%; border-top: 1px solid var(--line); background: var(--blue-soft); }
+.tour-stage iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: block; }
+.tour-start { position: absolute; inset: 0; width: 100%; display: grid; place-items: center; border: 0; cursor: pointer; padding: 24px;
+  font: 600 1.125rem/1.3 var(--font); text-align: center; background: #141B2D; overflow: hidden; }
+.tour-cover { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .6s ease; }
+.tour-start::before { content: ""; position: absolute; inset: 0; z-index: 1; background: radial-gradient(ellipse at center, rgba(15, 19, 28, 0.62), rgba(15, 19, 28, 0.3)); }
+.tour-label { position: relative; z-index: 2; display: grid; justify-items: center; gap: 12px; color: #FFFFFF; }
+.tour-start svg { width: 76px; height: 76px; transition: transform .3s ease; }
+.tour-start .sub { font-weight: 400; font-size: var(--fs-sm); color: rgba(255, 255, 255, 0.86); max-width: 30ch; }
+.tour-start:hover svg, .tour-start:focus-visible svg { transform: scale(1.08); }
+.tour-start:hover .tour-cover { transform: scale(1.03); }
+.tour-start:focus-visible { outline: 3px solid var(--blue); outline-offset: -6px; }
 @media (min-width: 640px) {
+  .tour-stage { aspect-ratio: 16 / 9; }
+  .tour-head { padding: 24px 28px; }
   .row2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .notes { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 32px; }
   .capacity { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
@@ -519,10 +537,30 @@ footer p { color: var(--slate); font-size: var(--fs-sm); max-width: 52ch; }
         </article>
       </div>
 
+      <div class="tour" id="tour">
+        <div class="tour-head">
+          <div>
+            <p class="kicker" data-i18n="tour_k">360° tour · Tianjin</p>
+            <h3 data-i18n="tour_h">Walk the Tianjin base before you come</h3>
+          </div>
+          <a class="btn btn-quiet" href="https://www.720yun.com/vr/626jeshkuf3" target="_blank" rel="noopener"><span data-i18n="tour_new">Open in a new tab</span> <span class="arr" aria-hidden="true">↗</span></a>
+        </div>
+        <div class="tour-stage" id="tour-stage">
+          <button type="button" class="tour-start" id="tour-start">
+            <img class="tour-cover" id="tour-cover" alt="">
+            <span class="tour-label">
+            <svg viewBox="0 0 72 72" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="36" cy="36" r="33"/><ellipse cx="36" cy="36" rx="33" ry="11"/><path d="M36 3c-9 8-14 20-14 33s5 25 14 33M36 3c9 8 14 20 14 33s-5 25-14 33"/><path d="M30 31l10 5-10 5z" fill="currentColor" stroke="none"/></svg>
+            <span data-i18n="tour_btn">Start the 360° tour</span>
+            <span class="sub" data-i18n="tour_sub">Drag to look around. On a phone, you can also turn your phone.</span>
+            </span>
+          </button>
+        </div>
+      </div>
+
       <div class="network">
         <p class="kicker label-col" data-i18n="net_k">Annual capacity, five bases combined</p>
         <div class="capacity">
-          <div><span class="num"><span data-i18n="c1_n">12 million</span><span class="unit" data-i18n="c1_u">m²</span></span><span class="lbl" data-i18n="c1_l">Sandwich and cleanroom panels</span></div>
+          <div><span class="num"><span data-i18n="c1_n">12 million</span><span class="unit" data-i18n="c1_u">m²</span></span><span class="lbl" data-i18n="c1_l">Sandwich panels</span></div>
           <div><span class="num"><span data-i18n="c2_n">5 million</span><span class="unit" data-i18n="c1_u">m²</span></span><span class="lbl" data-i18n="c2_l">Steel-bar truss floor deck</span></div>
           <div><span class="num"><span data-i18n="c3_n">200,000</span><span class="unit" data-i18n="c3_u">t</span></span><span class="lbl" data-i18n="c3_l">Premium steel structure</span></div>
         </div>
@@ -778,7 +816,12 @@ footer p { color: var(--slate); font-size: var(--fs-sm); max-width: 52ch; }
     net_k: '五大基地合计年产能',
     c1_n: '1200万',
     c1_u: '㎡',
-    c1_l: '夹芯板及洁净板',
+    c1_l: '夹芯板',
+    tour_k: '360°全景 · 天津基地',
+    tour_h: '来访之前，先在线走一遍天津基地',
+    tour_new: '在新窗口打开',
+    tour_btn: '开始360°全景参观',
+    tour_sub: '拖动画面即可环顾四周；用手机看时，也可以转动手机。',
     c2_n: '500万',
     c2_l: '钢筋桁架楼承板',
     c3_n: '20万',
@@ -1097,6 +1140,21 @@ footer p { color: var(--slate); font-size: var(--fs-sm); max-width: 52ch; }
   var initial = hash === '#zh' ? 'zh' : hash === '#en' ? 'en' : (load(LANG_KEY) || 'en');
   setLang(initial, hash === '#zh' || hash === '#en');
 })();
+
+  (function () {
+    var start = document.getElementById('tour-start'), stage = document.getElementById('tour-stage');
+    if (!start || !stage) return;
+    var aerial = document.querySelector('#sites .site img'), cover = document.getElementById('tour-cover');
+    if (aerial && cover) cover.src = aerial.getAttribute('src');
+    start.addEventListener('click', function () {
+      var f = document.createElement('iframe');
+      f.src = 'https://www.720yun.com/vr/626jeshkuf3';
+      f.title = (document.documentElement.getAttribute('lang') || '').indexOf('zh') === 0 ? '多维天津基地360°全景' : '360° tour of the DUOWEI Tianjin base';
+      f.setAttribute('allow', 'fullscreen; gyroscope; accelerometer; xr-spatial-tracking');
+      f.setAttribute('allowfullscreen', '');
+      stage.replaceChild(f, start);
+    });
+  })();
 </script>
 
 </body>
